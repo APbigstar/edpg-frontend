@@ -11,6 +11,7 @@ let fieldsState = {};
 fields.forEach((field) => (fieldsState[field.id] = ""));
 
 export default function Signup() {
+  const baseUrl = process.env.REACT_APP_BASE_URL || "http://localhost:5000/api";
   const navigate = useNavigate();
 
   const [signupState, setSignupState] = useState(fieldsState);
@@ -31,7 +32,7 @@ export default function Signup() {
     e.preventDefault();
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/auth/signup",
+        `${baseUrl}/auth/signup`,
         {
           ...signupState,
         },

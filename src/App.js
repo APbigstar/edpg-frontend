@@ -2,7 +2,13 @@ import React, { useMemo, useState, useEffect } from "react";
 import { CssBaseline, ThemeProvider } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
 import { useSelector } from "react-redux";
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 
 // Theme
 import { themeSettings } from "theme";
@@ -37,6 +43,7 @@ import {
 
 // App
 const App = () => {
+  const navigate = useNavigate();
   const mode = useSelector((state) => state.global.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
 
