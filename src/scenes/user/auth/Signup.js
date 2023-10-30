@@ -11,6 +11,7 @@ let fieldsState = {};
 fields.forEach((field) => (fieldsState[field.id] = ""));
 
 export default function Signup() {
+  console.log(process.env.REACT_APP_BASE_URL);
   const baseUrl = process.env.REACT_APP_BASE_URL || "http://localhost:5000/api";
   const navigate = useNavigate();
 
