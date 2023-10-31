@@ -13,6 +13,8 @@ import Monthly from "./admin/monthly";
 import Breakdown from "./admin/breakdown";
 import Admin from "./admin/admin";
 import Performance from "./admin/performance";
+import AdminLoginPage from "./admin/auth/pages/LoginPage";
+import AdminSignupPage from "./admin/auth/pages/SignupPage";
 
 import Header from "./user/common/header/Header";
 import About from "./user/about/About";
@@ -23,8 +25,8 @@ import Blog from "./user/blog/Blog";
 import Contact from "./user/contact/Contact";
 import Home from "./user/home/Home";
 import ScrollButton from "./user/scrollbtn/ScrollButton";
-import LoginPage from "./user/auth/pages/LoginPage";
-import SignupPage from "./user/auth/pages/SignupPage";
+import UserLoginPage from "./user/auth/pages/LoginPage";
+import UserSignupPage from "./user/auth/pages/SignupPage";
 import Footer from "./user/common/footer/Footer";
 
 // export scenes
@@ -51,6 +53,8 @@ export {
   Footer,
   Home,
   ScrollButton,
-  LoginPage,
-  SignupPage,
+  UserLoginPage,
+  UserSignupPage,
+  AdminLoginPage,
+  AdminSignupPage,
 };

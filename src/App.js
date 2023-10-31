@@ -37,8 +37,10 @@ import {
   Footer,
   Home,
   ScrollButton,
-  LoginPage,
-  SignupPage,
+  UserLoginPage,
+  UserSignupPage,
+  AdminLoginPage,
+  AdminSignupPage,
 } from "scenes";
 
 // App
@@ -64,6 +66,18 @@ const App = () => {
     } else {
       setIsAdmin(false);
     }
+    // if (
+    //   !location.pathname.includes("signup") &&
+    //   location.pathname.includes("admin") &&
+    //   !localStorage.getItem("admin-login-token")
+    // ) {
+    //   navigate("/admin/signin");
+    // } else if (
+    //   !location.pathname.includes("signup") &&
+    //   !localStorage.getItem("login-token")
+    // ) {
+    //   navigate("/");
+    // }
   }, [location.pathname]);
 
   return (
@@ -74,11 +88,10 @@ const App = () => {
           <CssBaseline />
           {!isSignIn && !isAdmin && <Header />}
           <Routes>
+            <Route path="/admin/signin" element={<AdminLoginPage />} />
+            <Route path="/admin/signup" element={<AdminSignupPage />} />
             <Route element={<Layout />}>
-              <Route
-                path="/admin"
-                element={<Navigate to="/admin/dashboard" />}
-              />
+              <Route path="/admin" element={<Navigate to="/admin/signin" />} />
               <Route path="/admin/dashboard" element={<Dashboard />} />
               <Route path="/admin/products" element={<Products />} />
               <Route path="/admin/users" element={<Users />} />
@@ -98,8 +111,8 @@ const App = () => {
             <Route exact path="/pricing" element={<Pricing />} />
             <Route exact path="/journal" element={<Blog />} />
             <Route exact path="/contact" element={<Contact />} />
-            <Route path="/signin" element={<LoginPage />} />
-            <Route path="/signup" element={<SignupPage />} />
+            <Route path="/signin" element={<UserLoginPage />} />
+            <Route path="/signup" element={<UserSignupPage />} />
           </Routes>
           {!isSignIn && !isAdmin && <Footer />}
           <ScrollButton />

@@ -71,7 +71,7 @@ export default function Signup() {
           `${baseUrl}/auth/signup`,
           {
             ...signupState,
-            role: "user",
+            role: "admin",
           },
           { withCredentials: true }
         );
@@ -79,7 +79,7 @@ export default function Signup() {
         if (success) {
           handleSuccess(message);
           setTimeout(() => {
-            navigate("/signin");
+            navigate("/admin/signin");
           }, 1500);
         } else {
           handleError("general", message);
@@ -146,7 +146,7 @@ export default function Signup() {
             >
               Sign Up
             </button>
-            <Link to="/signin">
+            <Link to="/admin/signin">
               <button
                 className="hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
                 style={{ background: "#1eb2a6" }}

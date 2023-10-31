@@ -164,7 +164,7 @@ export default function Users() {
   return (
     <Box m="1.5rem 2.5rem">
       {/* Header */}
-      <Header title="CUSTOMERS" subtitle="List of Customers" />
+      <Header title="Admins" subtitle="List of Admins" />
 
       {/* Content */}
       <Box
