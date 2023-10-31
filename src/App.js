@@ -25,7 +25,7 @@ import {
   Daily,
   Monthly,
   Breakdown,
-  Admin,
+  Admins,
   Performance,
   About,
   Header,
@@ -101,7 +101,7 @@ const App = () => {
               <Route path="/admin/daily" element={<Daily />} />
               <Route path="/admin/monthly" element={<Monthly />} />
               <Route path="/admin/breakdown" element={<Breakdown />} />
-              <Route path="/admin/admin" element={<Admin />} />
+              <Route path="/admin/admin" element={<Admins />} />
               <Route path="/admin/performance" element={<Performance />} />
             </Route>
             <Route exact path="/" element={<Home />} />

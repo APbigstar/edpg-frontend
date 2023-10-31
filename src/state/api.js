@@ -60,18 +60,20 @@ export const api = createApi({
       query: () => "general/dashboard",
       providesTags: ["Dashboard"],
     }),
-    deleteUser: build.mutation({
-      query: (id) => ({
-        url: `users/${id}`,
-        method: "DELETE",
-      }),
-    }),
     updateUser: build.mutation({
-      query: (id, data) => ({
-        url: `users/${id}`,
+      query: ({ id, ...data }) => ({
+        url: `management/user/${id}`,
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: ["Users", "Admins"],
+    }),
+    deleteUser: build.mutation({
+      query: (id) => ({
+        url: `management/user/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["User", "Admins"],
     }),
   }),
 });

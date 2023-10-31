@@ -25,9 +25,14 @@ import {
 
 import { FlexBetween } from ".";
 import profileImage from "assets/profile.jpeg";
+import {
+  useNavigate,
+} from "react-router-dom";
 
 // Navbar
 const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
+
+  const navigate = useNavigate();
   // redux dispatch items
   const dispatch = useDispatch();
   // theme
@@ -39,7 +44,11 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
 
   // handle
   const handleClick = (event) => setAnchorEl(event.currentTarget);
-  const handleClose = () => setAnchorEl(null);
+  const handleClose = () => {
+    setAnchorEl(null)
+    localStorage.removeItem('admin-login-token')
+    navigate('/admin')
+  };
 
   return (
     <AppBar

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import PropTypes from 'prop-types';
 import { Box, useTheme } from "@mui/material";
 import Button from '@mui/material/Button';
 import AddIcon from '@mui/icons-material/Add';
@@ -6,31 +7,29 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/DeleteOutlined';
 import SaveIcon from '@mui/icons-material/Save';
 import CancelIcon from '@mui/icons-material/Close';
-
-import { useGetUsersQuery } from "state/api";
-
-import { Header } from "components";
-
 import {
   GridRowModes,
   DataGrid,
   GridToolbarContainer,
   GridActionsCellItem,
-  GridRowEditStopReasons,
 } from '@mui/x-data-grid';
 import {
   randomCreatedDate,
   randomTraderName,
+  randomUpdatedDate,
   randomId,
-  randomArrayItem,
 } from '@mui/x-data-grid-generator';
+
+import { useGetUsersQuery, useDeleteUserMutation, useUpdateUserMutation } from "state/api";
+
+import { Header } from "components";
 
 function EditToolbar(props) {
   const { setRows, setRowModesModel } = props;
 
   const handleClick = () => {
     const id = randomId();
-    setRows((oldRows) => [...oldRows, { id, name: '', email: '', role: '' }]);
+    setRows((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
       [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
@@ -46,30 +45,74 @@ function EditToolbar(props) {
   );
 }
 
+EditToolbar.propTypes = {
+  setRowModesModel: PropTypes.func.isRequired,
+  setRows: PropTypes.func.isRequired,
+};
+
 export default function Users() {
+  const theme = useTheme();
+  const { data, isLoading } = useGetUsersQuery();
   const [rows, setRows] = React.useState([]);
   const [rowModesModel, setRowModesModel] = React.useState({});
 
-  const { data, isLoading } = useGetUsersQuery();
+  const [updateUserData] = useUpdateUserMutation();
+  const [deleteUserData] = useDeleteUserMutation();
 
-  const theme = useTheme();
+  React.useEffect(() => {
+    if (data) {
+      setRows(data);
+    }
+  }, [data]);
+
+
+  const handleRowEditStart = (params, event) => {
+    event.defaultMuiPrevented = true;
+  };
 
   const handleRowEditStop = (params, event) => {
-    if (params.reason === GridRowEditStopReasons.rowFocusOut) {
-      event.defaultMuiPrevented = true;
-    }
+    event.defaultMuiPrevented = true;
   };
 
   const handleEditClick = (id) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
 
-  const handleSaveClick = (id) => () => {
+  const handleSaveClick = (id) => async () => {
+    try {
+      const updatedRow = rows.find((row) => row._id === id);
+      if (updatedRow) {
+        const updatedUserData = {
+          id: updatedRow._id,
+          name: updatedRow.name,
+          email: updatedRow.email,
+          role: updatedRow.role,
+        };
+        console.log(updatedUserData)
+        const { data } = await updateUserData(updatedUserData);
+
+        if (data) {
+          setRows((prevRows) =>
+            prevRows.map((row) => (row._id === id ? { ...row, isNew: false } : row))
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Update error:', error);
+    }
+
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id) => () => {
-    setRows(rows.filter((row) => row.id !== id));
+  const handleDeleteClick = (id) => async () => {
+    try {
+      const { data } = await deleteUserData(id);
+      if (data) {
+        setRows((prevRows) => prevRows.filter((row) => row._id !== id));
+      }
+    } catch (error) {
+      console.error('Delete error:', error);
+    }
   };
 
   const handleCancelClick = (id) => () => {
@@ -78,20 +121,16 @@ export default function Users() {
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
     });
 
-    const editedRow = rows.find((row) => row.id === id);
+    const editedRow = rows.find((row) => row._id === id);
     if (editedRow.isNew) {
-      setRows(rows.filter((row) => row.id !== id));
+      setRows(rows.filter((row) => row._id !== id));
     }
   };
 
   const processRowUpdate = (newRow) => {
     const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+    setRows(rows.map((row) => (row._id === newRow.id ? updatedRow : row)));
     return updatedRow;
-  };
-
-  const handleRowModesModelChange = (newRowModesModel) => {
-    setRowModesModel(newRowModesModel);
   };
 
   const columns = [
@@ -196,21 +235,22 @@ export default function Users() {
         }}
       >
         <DataGrid
-          loading={isLoading || !data}
           getRowId={(row) => row._id}
-          rows={data || []}
+          rows={rows}
           columns={columns}
           editMode="row"
           rowModesModel={rowModesModel}
-          onRowModesModelChange={handleRowModesModelChange}
+          onRowModesModelChange={(newModel) => setRowModesModel(newModel)}
+          onRowEditStart={handleRowEditStart}
           onRowEditStop={handleRowEditStop}
           processRowUpdate={processRowUpdate}
-          slots={{
-            toolbar: EditToolbar,
+          components={{
+            Toolbar: EditToolbar,
           }}
-          slotProps={{
+          componentsProps={{
             toolbar: { setRows, setRowModesModel },
           }}
+          experimentalFeatures={{ newEditingApi: true }}
         />
       </Box>
     </Box>

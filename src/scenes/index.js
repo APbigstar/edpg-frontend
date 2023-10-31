@@ -11,7 +11,7 @@ import Overview from "./admin/overview";
 import Daily from "./admin/daily";
 import Monthly from "./admin/monthly";
 import Breakdown from "./admin/breakdown";
-import Admin from "./admin/admin";
+import Admins from "./admin/admin";
 import Performance from "./admin/performance";
 import AdminLoginPage from "./admin/auth/pages/LoginPage";
 import AdminSignupPage from "./admin/auth/pages/SignupPage";
@@ -41,7 +41,7 @@ export {
   Daily,
   Monthly,
   Breakdown,
-  Admin,
+  Admins,
   Performance,
   About,
   Header,
