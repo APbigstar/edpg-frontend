@@ -20,7 +20,7 @@ import {
   Products,
   Users,
   Transactions,
-  Geography,
+  Questions,
   Overview,
   Daily,
   Monthly,
@@ -96,7 +96,7 @@ const App = () => {
               <Route path="/admin/products" element={<Products />} />
               <Route path="/admin/users" element={<Users />} />
               <Route path="/admin/transactions" element={<Transactions />} />
-              <Route path="/admin/geography" element={<Geography />} />
+              <Route path="/admin/questions" element={<Questions />} />
               <Route path="/admin/overview" element={<Overview />} />
               <Route path="/admin/daily" element={<Daily />} />
               <Route path="/admin/monthly" element={<Monthly />} />

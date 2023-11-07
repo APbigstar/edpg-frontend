@@ -6,7 +6,7 @@ import Dashboard from "./admin/dashboard";
 import Products from "./admin/products";
 import Users from "./admin/users";
 import Transactions from "./admin/transactions";
-import Geography from "./admin/geography";
+import Questions from "./admin/questions";
 import Overview from "./admin/overview";
 import Daily from "./admin/daily";
 import Monthly from "./admin/monthly";
@@ -36,7 +36,7 @@ export {
   Products,
   Users,
   Transactions,
-  Geography,
+  Questions,
   Overview,
   Daily,
   Monthly,

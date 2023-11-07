@@ -14,9 +14,6 @@ import {
   GridActionsCellItem,
 } from '@mui/x-data-grid';
 import {
-  randomCreatedDate,
-  randomTraderName,
-  randomUpdatedDate,
   randomId,
 } from '@mui/x-data-grid-generator';
 
@@ -28,11 +25,11 @@ function EditToolbar(props) {
   const { setRows, setRowModesModel } = props;
 
   const handleClick = () => {
-    const id = randomId();
-    setRows((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
+    const _id = randomId();
+    setRows((oldRows) => [...oldRows, { _id, name: '', age: '', isNew: true }]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+      [_id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
     }));
   };
 
@@ -52,7 +49,7 @@ EditToolbar.propTypes = {
 
 export default function Users() {
   const theme = useTheme();
-  const { data, isLoading } = useGetUsersQuery();
+  const { data } = useGetUsersQuery();
   const [rows, setRows] = React.useState([]);
   const [rowModesModel, setRowModesModel] = React.useState({});
 
@@ -79,28 +76,6 @@ export default function Users() {
   };
 
   const handleSaveClick = (id) => async () => {
-    try {
-      const updatedRow = rows.find((row) => row._id === id);
-      if (updatedRow) {
-        const updatedUserData = {
-          id: updatedRow._id,
-          name: updatedRow.name,
-          email: updatedRow.email,
-          role: updatedRow.role,
-        };
-        console.log(updatedUserData)
-        const { data } = await updateUserData(updatedUserData);
-
-        if (data) {
-          setRows((prevRows) =>
-            prevRows.map((row) => (row._id === id ? { ...row, isNew: false } : row))
-          );
-        }
-      }
-    } catch (error) {
-      console.error('Update error:', error);
-    }
-
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
@@ -127,9 +102,17 @@ export default function Users() {
     }
   };
 
-  const processRowUpdate = (newRow) => {
-    const updatedRow = { ...newRow, isNew: false };
-    setRows(rows.map((row) => (row._id === newRow.id ? updatedRow : row)));
+  const processRowUpdate = async (newRow) => {
+    var updatedRow;
+    if (newRow.isNew === true) {
+      updatedRow = { ...newRow }
+    } else {
+      updatedRow = { ...newRow, isNew: false };
+    }
+    const { data } = await updateUserData(updatedRow);
+    if (data._id) {
+      setRows(rows.map((row) => (row._id === newRow._id ? updatedRow : row)));
+    }
     return updatedRow;
   };
 

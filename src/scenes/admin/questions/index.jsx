@@ -26,11 +26,11 @@ function EditToolbar(props) {
   const { setRows, setRowModesModel } = props;
 
   const handleClick = () => {
-    const _id = randomId();
-    setRows((oldRows) => [...oldRows, { _id, name: '', age: '', isNew: true }]);
+    const id = randomId();
+    setRows((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
-      [_id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+      [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
     }));
   };
 
@@ -48,7 +48,7 @@ EditToolbar.propTypes = {
   setRows: PropTypes.func.isRequired,
 };
 
-export default function Admins() {
+export default function Questions() {
   const theme = useTheme();
   const { data, isLoading } = useGetAdminsQuery();
   const [rows, setRows] = React.useState([]);
@@ -103,14 +103,9 @@ export default function Admins() {
     }
   };
 
-  const processRowUpdate = async (newRow) => {
-    var updatedRow;
-    if (newRow.isNew === true) {
-      updatedRow = { ...newRow }
-    } else {
-      updatedRow = { ...newRow, isNew: false };
-    }
-    const { data } = await updateUserData(updatedRow);
+  const processRowUpdate = (newRow) => {
+    const updatedRow = { ...newRow, isNew: false };
+    const { data } = updateUserData(updatedRow);
     if (data._id) {
       setRows(rows.map((row) => (row._id === newRow._id ? updatedRow : row)));
     }
@@ -132,9 +127,9 @@ export default function Admins() {
       field: 'role',
       headerName: 'Role',
       flex: 1,
+      editable: true,
       type: 'singleSelect',
       valueOptions: ['admin', 'user'],
-      editable: true,
     },
     {
       field: 'actions',
@@ -187,7 +182,7 @@ export default function Admins() {
   return (
     <Box m="1.5rem 2.5rem">
       {/* Header */}
-      <Header title="Users" subtitle="List of Users" />
+      <Header title="Questions" subtitle="List of Questions" />
 
       {/* Content */}
       <Box
@@ -228,9 +223,6 @@ export default function Admins() {
           onRowEditStart={handleRowEditStart}
           onRowEditStop={handleRowEditStop}
           processRowUpdate={processRowUpdate}
-          onProcessRowUpdateError={(error) => {
-            console.error('Error during row update:', error);
-          }}
           components={{
             Toolbar: EditToolbar,
           }}

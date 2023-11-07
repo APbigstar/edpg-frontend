@@ -61,11 +61,20 @@ export const api = createApi({
       providesTags: ["Dashboard"],
     }),
     updateUser: build.mutation({
-      query: ({ id, ...data }) => ({
-        url: `management/user/${id}`,
-        method: "PUT",
-        body: data,
-      }),
+      query: (data) => {
+        const { _id, ...userData } = data;
+        const method = userData.isNew === false ? "PUT" : "POST";
+        const url =
+          userData.isNew === false
+            ? `management/user/${_id}`
+            : "management/user";
+
+        return {
+          url,
+          method,
+          body: userData,
+        };
+      },
       invalidatesTags: ["Users", "Admins"],
     }),
     deleteUser: build.mutation({
