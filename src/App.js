@@ -17,14 +17,9 @@ import { themeSettings } from "theme";
 import {
   Layout,
   Dashboard,
-  Products,
   Users,
   Transactions,
   Questions,
-  Overview,
-  Daily,
-  Monthly,
-  Breakdown,
   Admins,
   Performance,
   About,
@@ -93,14 +88,9 @@ const App = () => {
             <Route element={<Layout />}>
               <Route path="/admin" element={<Navigate to="/admin/signin" />} />
               <Route path="/admin/dashboard" element={<Dashboard />} />
-              <Route path="/admin/products" element={<Products />} />
               <Route path="/admin/users" element={<Users />} />
               <Route path="/admin/transactions" element={<Transactions />} />
               <Route path="/admin/questions" element={<Questions />} />
-              <Route path="/admin/overview" element={<Overview />} />
-              <Route path="/admin/daily" element={<Daily />} />
-              <Route path="/admin/monthly" element={<Monthly />} />
-              <Route path="/admin/breakdown" element={<Breakdown />} />
               <Route path="/admin/admin" element={<Admins />} />
               <Route path="/admin/performance" element={<Performance />} />
             </Route>

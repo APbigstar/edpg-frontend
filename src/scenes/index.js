@@ -3,14 +3,9 @@
 
 import Layout from "./admin/layout";
 import Dashboard from "./admin/dashboard";
-import Products from "./admin/products";
 import Users from "./admin/users";
 import Transactions from "./admin/transactions";
 import Questions from "./admin/questions";
-import Overview from "./admin/overview";
-import Daily from "./admin/daily";
-import Monthly from "./admin/monthly";
-import Breakdown from "./admin/breakdown";
 import Admins from "./admin/admin";
 import Performance from "./admin/performance";
 import AdminLoginPage from "./admin/auth/pages/LoginPage";
@@ -33,14 +28,9 @@ import Footer from "./user/common/footer/Footer";
 export {
   Layout,
   Dashboard,
-  Products,
   Users,
   Transactions,
   Questions,
-  Overview,
-  Daily,
-  Monthly,
-  Breakdown,
   Admins,
   Performance,
   About,
