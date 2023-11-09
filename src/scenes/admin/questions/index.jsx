@@ -17,45 +17,138 @@ import {
 import {
   randomId,
 } from '@mui/x-data-grid-generator';
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
 
-import { useGetAdminsQuery, useDeleteUserMutation, useUpdateUserMutation } from "state/api";
+import { useGetQuestionsQuery, useDeleteQuestionMutation, useUpdateQuestionMutation } from "state/api";
 
 import { Header } from "components";
 
+const types = { 'empty': 'Fill Empty', 'single': "Single Choice", 'multi': "Multi Choice" }
+const categorys = {
+  'html': 'HTML', 'css': "CSS", 'javascript': 'JavaScript'
+}
+
 function EditToolbar(props) {
-  const { setRows, setRowModesModel } = props;
+
+  const { setRows, setRowModesModel, setType, setCategory } = props;
 
   const handleClick = () => {
-    const id = randomId();
-    setRows((oldRows) => [...oldRows, { id, name: '', age: '', isNew: true }]);
+    const _id = randomId();
+    setRows((oldRows) => {
+      return [...oldRows, { _id, question: '', answers: [], cases: [], isNew: true }];
+    });
     setRowModesModel((oldModel) => ({
       ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
+      [_id]: { mode: GridRowModes.Edit, fieldToFocus: 'question' },
     }));
   };
 
+  const handleCategoryChange = (value) => {
+    setCategory(value)
+  }
+
+  const handleTypeChange = (value) => {
+    setType(value)
+  }
+
   return (
-    <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-        Add record
+    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "start", gap: "30px", marginBottom: "17px", }}>
+      <Button variant="contained" color="primary" sx={{ color: "white", height: "50px" }} startIcon={<AddIcon />} onClick={handleClick}>
+        Add Question
       </Button>
-    </GridToolbarContainer>
+      <FormControl sx={{ width: "130px" }}>
+        <InputLabel
+          id="category-select-label"
+          sx={{
+            color: "white",
+          }}
+        >
+          Category
+        </InputLabel>
+        <Select
+          labelId="category-select-label"
+          id="category-select"
+          label="category"
+          defaultValue={Object.keys(categorys)[0]}
+          onChange={(event) => handleCategoryChange(event.target.value)}
+          sx={{
+            "&:before": {
+              borderColor: "white",
+            },
+            "&:after": {
+              borderColor: "white",
+            },
+            "&:not(.Mui-disabled):hover::before": {
+              borderColor: "white",
+            },
+          }}
+        >
+          {Object.keys(categorys).map((value, index) => (
+            <MenuItem key={index} value={value}>{categorys[value]}</MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      <FormControl sx={{ width: "130px" }}>
+        <InputLabel
+          id="type-select-label"
+          sx={{
+            color: "white",
+          }}
+        >
+          Type
+        </InputLabel>
+        <Select
+          labelId="type-select-label"
+          id="type-select"
+          label="type"
+          onChange={(event) => handleTypeChange(event.target.value)}
+          defaultValue={Object.keys(types)[0]}
+          sx={{
+            "&:before": {
+              borderColor: "white",
+            },
+            "&:after": {
+              borderColor: "white",
+            },
+            "&:not(.Mui-disabled):hover::before": {
+              borderColor: "white",
+            },
+          }}
+        >
+          {Object.keys(types).map((value, index) => (
+            <MenuItem key={index} value={value}>{types[value]}</MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+    </Box>
   );
 }
 
 EditToolbar.propTypes = {
   setRowModesModel: PropTypes.func.isRequired,
   setRows: PropTypes.func.isRequired,
+  setType: PropTypes.func.isRequired,
+  setCategory: PropTypes.func.isRequired,
 };
+
 
 export default function Questions() {
   const theme = useTheme();
-  const { data, isLoading } = useGetAdminsQuery();
   const [rows, setRows] = React.useState([]);
   const [rowModesModel, setRowModesModel] = React.useState({});
+  const [category, setCategory] = React.useState('html');
+  const [type, setType] = React.useState('empty');
+  const { data, refetch } = useGetQuestionsQuery({ type, category });
 
-  const [updateUserData] = useUpdateUserMutation();
-  const [deleteUserData] = useDeleteUserMutation();
+  const [updateQuestionData] = useUpdateQuestionMutation();
+  const [deleteQuestionData] = useDeleteQuestionMutation();
+
+  React.useEffect(() => {
+    refetch({ type, category });
+  }, [type, category, refetch]);
 
   React.useEffect(() => {
     if (data) {
@@ -82,7 +175,7 @@ export default function Questions() {
 
   const handleDeleteClick = (id) => async () => {
     try {
-      const { data } = await deleteUserData(id);
+      const { data } = await deleteQuestionData(id);
       if (data) {
         setRows((prevRows) => prevRows.filter((row) => row._id !== id));
       }
@@ -103,33 +196,52 @@ export default function Questions() {
     }
   };
 
-  const processRowUpdate = (newRow) => {
-    const updatedRow = { ...newRow, isNew: false };
-    const { data } = updateUserData(updatedRow);
-    if (data._id) {
+  const processRowUpdate = async (newRow) => {
+    if (!newRow.question || !newRow.answers) {
+      alert('Please fill in all fields.');
+      return null;
+    }
+
+    // Check for words in answers that are not included in the question
+    const invalidWords = newRow.answers.trim().split(",").filter(element => !newRow.question.includes(element.trim()));
+
+    if (invalidWords.length > 0) {
+      const beVerb = invalidWords.length === 1 ? 'is' : 'are';
+      alert(invalidWords.join(", ") + " " + beVerb + ' invalid!');
+      return null;
+    }
+
+    if (type === 'single') {
+      if (newRow.answers.trim().split(",").length > 1) {
+        alert('Please input only one valid word into Answers field')
+        return null;
+      }
+    }
+
+    let updatedRow;
+    if (newRow.isNew === true) {
+      updatedRow = { ...newRow, category, type };
+    } else {
+      updatedRow = { ...newRow, category, type, isNew: false };
+    }
+
+    const { data } = await updateQuestionData(updatedRow);
+    if (data.data._id) {
       setRows(rows.map((row) => (row._id === newRow._id ? updatedRow : row)));
     }
+
     return updatedRow;
   };
 
   const columns = [
-    { field: 'name', headerName: 'Name', flex: 1, editable: true },
+    { field: 'question', headerName: 'Question', flex: 1, editable: true },
     {
-      field: 'email',
-      headerName: 'Email',
-      type: 'email',
+      field: 'answers',
+      headerName: type === 'single' ? 'Answer' : type === 'empty' ? "Empty Words" : 'Answers',
       flex: 1,
       align: 'left',
       headerAlign: 'left',
       editable: true,
-    },
-    {
-      field: 'role',
-      headerName: 'Role',
-      flex: 1,
-      editable: true,
-      type: 'singleSelect',
-      valueOptions: ['admin', 'user'],
     },
     {
       field: 'actions',
@@ -179,6 +291,17 @@ export default function Questions() {
     },
   ];
 
+  if (type !== 'empty') {
+    columns.splice(2, 0, {
+      field: 'cases',
+      headerName: 'Cases',
+      flex: 1,
+      align: 'left',
+      headerAlign: 'left',
+      editable: true,
+    });
+  }
+
   return (
     <Box m="1.5rem 2.5rem">
       {/* Header */}
@@ -223,11 +346,14 @@ export default function Questions() {
           onRowEditStart={handleRowEditStart}
           onRowEditStop={handleRowEditStop}
           processRowUpdate={processRowUpdate}
+          onProcessRowUpdateError={(error) => {
+            console.error('Error during row update:', error);
+          }}
           components={{
             Toolbar: EditToolbar,
           }}
           componentsProps={{
-            toolbar: { setRows, setRowModesModel },
+            toolbar: { setRows, setRowModesModel, setCategory, setType },
           }}
           experimentalFeatures={{ newEditingApi: true }}
         />

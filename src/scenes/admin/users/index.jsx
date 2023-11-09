@@ -26,7 +26,9 @@ function EditToolbar(props) {
 
   const handleClick = () => {
     const _id = randomId();
-    setRows((oldRows) => [...oldRows, { _id, name: '', age: '', isNew: true }]);
+    setRows((oldRows) => {
+      return [...oldRows, { _id, name: '', age: '', isNew: true }]
+    });
     setRowModesModel((oldModel) => ({
       ...oldModel,
       [_id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
@@ -35,8 +37,8 @@ function EditToolbar(props) {
 
   return (
     <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-        Add record
+      <Button variant="contained" color="primary" sx={{ color: "white", marginBottom: "10px" }} startIcon={<AddIcon />} onClick={handleClick}>
+        Add User
       </Button>
     </GridToolbarContainer>
   );
@@ -110,7 +112,7 @@ export default function Users() {
       updatedRow = { ...newRow, isNew: false };
     }
     const { data } = await updateUserData(updatedRow);
-    if (data._id) {
+    if (data.data._id) {
       setRows(rows.map((row) => (row._id === newRow._id ? updatedRow : row)));
     }
     return updatedRow;
@@ -227,6 +229,9 @@ export default function Users() {
           onRowEditStart={handleRowEditStart}
           onRowEditStop={handleRowEditStop}
           processRowUpdate={processRowUpdate}
+          onProcessRowUpdateError={(error) => {
+            console.error('Error during row update:', error);
+          }}
           components={{
             Toolbar: EditToolbar,
           }}

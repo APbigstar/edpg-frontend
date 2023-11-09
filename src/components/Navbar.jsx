@@ -86,27 +86,14 @@ const Navbar = ({ user, isSidebarOpen, setIsSidebarOpen }) => {
 
         {/* Right Side */}
         <FlexBetween gap="1.5rem">
-          {/* Source Code */}
-          <IconButton
-            onClick={() =>
-              window.open(
-                "http://www.github.com/sanidhyy/mern-admin/",
-                "_blank"
-              )
-            }
-            title="Source Code"
-          >
-            <GitHub sx={{ fontSize: "25px" }} />
-          </IconButton>
-
           {/* Dark/Light Mode */}
-          <IconButton onClick={() => dispatch(setMode())} title="Dark Mode">
+          {/* <IconButton onClick={() => dispatch(setMode())} title="Dark Mode">
             {theme.palette.mode === "dark" ? (
               <DarkModeOutlined sx={{ fontSize: "25px" }} />
             ) : (
               <LightModeOutlined sx={{ fontSize: "25px" }} />
             )}
-          </IconButton>
+          </IconButton> */}
 
           {/* Settings */}
           <IconButton title="Setting">

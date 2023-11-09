@@ -24,10 +24,6 @@ export const api = createApi({
       query: (id) => `general/user/${id}`,
       providesTags: ["User"],
     }),
-    getProducts: build.query({
-      query: () => "client/products",
-      providesTags: ["Products"],
-    }),
     getUsers: build.query({
       query: () => "client/users",
       providesTags: ["Users"],
@@ -84,13 +80,47 @@ export const api = createApi({
       }),
       invalidatesTags: ["User", "Admins"],
     }),
+    getQuestions: build.query({
+      query: (params) => {
+        const url = `management/questions?category=${params.category}&type=${params.type}`;
+        const method = "GET";
+        return {
+          url,
+          method,
+        };
+      },
+      providesTags: ["Users"],
+    }),
+    updateQuestion: build.mutation({
+      query: (data) => {
+        const { _id, ...userData } = data;
+        const method = userData.isNew === false ? "PUT" : "POST";
+        const url =
+          userData.isNew === false
+            ? `management/question/${_id}`
+            : "management/question";
+
+        return {
+          url,
+          method,
+          body: userData,
+        };
+      },
+      invalidatesTags: ["Questions"],
+    }),
+    deleteQuestion: build.mutation({
+      query: (id) => ({
+        url: `management/question/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Questions"],
+    }),
   }),
 });
 
 // export api endpoints
 export const {
   useGetUserQuery,
-  useGetProductsQuery,
   useGetUsersQuery,
   useGetTransactionsQuery,
   useGetGeographyQuery,
@@ -100,4 +130,7 @@ export const {
   useGetDashboardQuery,
   useDeleteUserMutation,
   useUpdateUserMutation,
+  useGetQuestionsQuery,
+  useDeleteQuestionMutation,
+  useUpdateQuestionMutation,
 } = api;

@@ -36,8 +36,8 @@ function EditToolbar(props) {
 
   return (
     <GridToolbarContainer>
-      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
-        Add record
+      <Button variant="contained" color="primary" sx={{ color: "white", marginBottom: "10px" }} startIcon={<AddIcon />} onClick={handleClick}>
+        Add Admin
       </Button>
     </GridToolbarContainer>
   );
@@ -111,7 +111,7 @@ export default function Admins() {
       updatedRow = { ...newRow, isNew: false };
     }
     const { data } = await updateUserData(updatedRow);
-    if (data._id) {
+    if (data.data._id) {
       setRows(rows.map((row) => (row._id === newRow._id ? updatedRow : row)));
     }
     return updatedRow;
