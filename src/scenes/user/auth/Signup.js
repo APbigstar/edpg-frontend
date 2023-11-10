@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { signupFields } from "../../dummydata";
-import Input from "./Input";
+import Input from "../../../components/Input";
 import { Link, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import axios from "axios";
@@ -61,7 +61,7 @@ export default function Signup() {
       validationErrors.password = "Password is required";
       handleError("password", "Password is required");
     } else if (signupState.password.length < 8) {
-      validationErrors.email = "Input over 8 characters";
+      validationErrors.password = "Input over 8 characters";
     }
     setErrors(validationErrors);
 
