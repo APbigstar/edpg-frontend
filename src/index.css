@@ -15,7 +15,12 @@ body,
   font-family: "Inter", sans-serif;
 }
 
-
+@font-face {
+  font-family: 'SamuraiBlast';
+  src: url('./assets/fonts/SamuraiBlast.woff') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 10px;

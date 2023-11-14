@@ -6,9 +6,8 @@ import "./header.css";
 import { useSelector, useDispatch } from "react-redux";
 import { setIsLoggedin } from "../../../../features/auth/auth";
 
-// import { useSelector } from "react-redux";
-
 const Header = () => {
+  console.log(localStorage.getItem("login-token"));
   const [click, setClick] = useState(false);
 
   const loginState = useSelector((state) => state.authSetter.value);
@@ -17,6 +16,11 @@ const Header = () => {
   const logout = () => {
     localStorage.removeItem("login-token");
     dispatch(setIsLoggedin(false));
+  };
+
+  const showGamesWindow = () => {
+    const gameUrl = "http://localhost:3000/games";
+    window.open(gameUrl, "_blank", "width=1600,height=1000");
   };
 
   return (
@@ -49,10 +53,15 @@ const Header = () => {
             <li>
               <Link to="/contact">Contact</Link>
             </li>
+            {localStorage.getItem("login-token") && (
+              <li onClick={showGamesWindow}>
+                <Link to="#">Game</Link>
+              </li>
+            )}
           </ul>
           <div className="start">
             <div className="button">
-              {loginState ? (
+              {localStorage.getItem("login-token") ? (
                 <Link onClick={logout}>Sign Out</Link>
               ) : (
                 <Link to="/signin">Sign In</Link>

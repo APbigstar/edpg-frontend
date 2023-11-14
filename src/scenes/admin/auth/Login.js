@@ -76,7 +76,7 @@ export default function Login() {
         if (success) {
           dispatch(setIsLoggedin(true));
           handleSuccess(message);
-          localStorage.setItem("admin-login-token", data);
+          localStorage.setItem("admin-login-token", data.token);
           setTimeout(() => {
             navigate("/admin/dashboard");
           }, 1000);

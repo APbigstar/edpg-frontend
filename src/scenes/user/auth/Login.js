@@ -78,7 +78,8 @@ export default function Login() {
         if (success) {
           dispatch(setIsLoggedin(true));
           handleSuccess(message);
-          localStorage.setItem("login-token", data);
+          console.log(data);
+          localStorage.setItem("login-token", data.token);
           setTimeout(() => {
             navigate("/");
           }, 1000);

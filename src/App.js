@@ -36,6 +36,7 @@ import {
   UserSignupPage,
   AdminLoginPage,
   AdminSignupPage,
+  Games,
 } from "scenes";
 
 // App
@@ -47,6 +48,7 @@ const App = () => {
   const location = useLocation();
   const [isSignIn, setIsSignIn] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [isGame, setIsGame] = useState(false);
   useEffect(() => {
     if (
       location.pathname.includes("signin") ||
@@ -60,6 +62,11 @@ const App = () => {
       setIsAdmin(true);
     } else {
       setIsAdmin(false);
+    }
+    if (location.pathname.includes("games")) {
+      setIsGame(true);
+    } else {
+      setIsGame(false);
     }
     // if (
     //   !location.pathname.includes("signup") &&
@@ -81,7 +88,7 @@ const App = () => {
         {/* Theme Provider */}
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          {!isSignIn && !isAdmin && <Header />}
+          {!isSignIn && !isAdmin && !isGame && <Header />}
           <Routes>
             <Route path="/admin/signin" element={<AdminLoginPage />} />
             <Route path="/admin/signup" element={<AdminSignupPage />} />
@@ -103,8 +110,9 @@ const App = () => {
             <Route exact path="/contact" element={<Contact />} />
             <Route path="/signin" element={<UserLoginPage />} />
             <Route path="/signup" element={<UserSignupPage />} />
+            <Route path="/games" element={<Games />} />
           </Routes>
-          {!isSignIn && !isAdmin && <Footer />}
+          {!isSignIn && !isAdmin && !isGame && <Footer />}
           <ScrollButton />
         </ThemeProvider>
       </>
