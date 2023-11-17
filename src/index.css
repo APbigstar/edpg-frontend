@@ -192,7 +192,7 @@ p {
 }
 @media screen and (max-width: 768px) {
   .grid2,
-  .grid3,
+  .grid3, 
   .grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -203,3 +203,119 @@ p {
   }
 }
 
+
+.test_btn {
+  box-sizing: border-box;
+  appearance: none;
+  background-color: transparent;
+  border: 2px solid #e74c3c;
+  border-radius: 0.6em;
+  color: #e74c3c;
+  cursor: pointer;
+  display: flex;
+  align-self: center;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1;
+  margin: 20px;
+  padding: 1.2em 2.8em;
+  text-decoration: none;
+  text-align: center;
+  text-transform: uppercase;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+
+  &:hover,
+  &:focus {
+    color: #fff;
+    outline: 0;
+  }
+}
+
+.html_btn {
+  border-color: #3498db;
+  color: #fff;
+  box-shadow: 0 0 40px 40px #3498db inset, 0 0 0 0 #3498db !important;
+  transition: all 150ms ease-in-out;
+  
+}
+.html_btn:hover {
+  box-shadow: 0 0 10px 0 #3498db inset, 0 0 10px 4px #3498db !important;
+}
+
+
+.css_btn {
+  border-radius: 3em;
+  border-color: #1abc9c;
+  color: #fff;
+  background-image: linear-gradient(to right, 
+    rgba(26, 188, 156, 0.4),
+    rgba(26, 188, 156, 0.4) 5%,
+    #1abc9c 5%, 
+    #1abc9c 10%,
+    rgba(26, 188, 156, 0.4) 10%,
+    rgba(26, 188, 156, 0.4) 15%,
+    #1abc9c 15%, 
+    #1abc9c 20%,
+    rgba(26, 188, 156, 0.4) 20%,
+    rgba(26, 188, 156, 0.4) 25%,
+    #1abc9c 25%, 
+    #1abc9c 30%,
+    rgba(26, 188, 156, 0.4) 30%,
+    rgba(26, 188, 156, 0.4) 35%,
+    #1abc9c 35%, 
+    #1abc9c 40%,
+    rgba(26, 188, 156, 0.4) 40%,
+    rgba(26, 188, 156, 0.4) 45%,
+    #1abc9c 45%, 
+    #1abc9c 50%,
+    rgba(26, 188, 156, 0.4) 50%,
+    rgba(26, 188, 156, 0.4) 55%,
+    #1abc9c 55%, 
+    #1abc9c 60%,
+    rgba(26, 188, 156, 0.4) 60%,
+    rgba(26, 188, 156, 0.4) 65%,
+    #1abc9c 65%, 
+    #1abc9c 70%,
+    rgba(26, 188, 156, 0.4) 70%,
+    rgba(26, 188, 156, 0.4) 75%,
+    #1abc9c 75%, 
+    #1abc9c 80%,
+    rgba(26, 188, 156, 0.4) 80%,
+    rgba(26, 188, 156, 0.4) 85%,
+    #1abc9c 85%, 
+    #1abc9c 90%,
+    rgba(26, 188, 156, 0.4) 90%,
+    rgba(26, 188, 156, 0.4) 95%,
+    #1abc9c 95%, 
+    #1abc9c 100%);
+  background-position: 0 0;
+  background-size: 100%;
+  transition: background 300ms ease-in-out;
+}
+
+.css_btn:hover {
+  background-position: 100px;
+}
+
+
+.js_btn {
+  border-color: #f1c40f;
+  color: #fff;
+  background-image: linear-gradient(45deg, #f1c40f 50%, transparent 50%);
+  background-position: 100%;
+  background-size: 400%;
+  transition: background 300ms ease-in-out;
+}
+
+.js_btn:hover {
+  background-position: 0;
+}
+
+
+.reset_btn {
+  transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out;
+}
+.reset_btn:hover {
+  box-shadow: 0 0 40px 40px #e74c3c inset;
+}

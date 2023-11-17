@@ -51,12 +51,12 @@ export default function Login() {
     e.preventDefault();
     const validationErrors = {};
 
-    if (!loginState.email.trim()) {
+    if (!loginState.email.replace(/\s/g, "")) {
       validationErrors.email = "Email is required";
       handleError("email", "Email is required");
     }
 
-    if (!loginState.password.trim()) {
+    if (!loginState.password.replace(/\s/g, "")) {
       validationErrors.password = "Password is required";
       handleError("password", "Password is required");
     }
@@ -78,8 +78,8 @@ export default function Login() {
         if (success) {
           dispatch(setIsLoggedin(true));
           handleSuccess(message);
-          console.log(data);
           localStorage.setItem("login-token", data.token);
+          localStorage.setItem("login-user", data.userId);
           setTimeout(() => {
             navigate("/");
           }, 1000);

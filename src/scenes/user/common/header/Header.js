@@ -7,7 +7,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { setIsLoggedin } from "../../../../features/auth/auth";
 
 const Header = () => {
-  console.log(localStorage.getItem("login-token"));
   const [click, setClick] = useState(false);
 
   const loginState = useSelector((state) => state.authSetter.value);
@@ -15,6 +14,7 @@ const Header = () => {
 
   const logout = () => {
     localStorage.removeItem("login-token");
+    localStorage.removeItem("login-user");
     dispatch(setIsLoggedin(false));
   };
 

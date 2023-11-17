@@ -23,7 +23,7 @@ import ScrollButton from "./user/scrollbtn/ScrollButton";
 import UserLoginPage from "./user/auth/pages/LoginPage";
 import UserSignupPage from "./user/auth/pages/SignupPage";
 import Footer from "./user/common/footer/Footer";
-import Games from "./user/games";
+import { Games, EmptyTest, SingleTest, MultiTest } from "./user/games";
 
 // export scenes
 export {
@@ -49,4 +49,7 @@ export {
   UserSignupPage,
   AdminLoginPage,
   AdminSignupPage,
+  EmptyTest,
+  SingleTest,
+  MultiTest,
 };

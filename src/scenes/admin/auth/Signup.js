@@ -44,12 +44,12 @@ export default function Signup() {
     e.preventDefault();
     const validationErrors = {};
 
-    if (!signupState.username.trim()) {
+    if (!signupState.username.replace(/\s/g, "")) {
       validationErrors.username = "Name is required";
       handleError("username", "Name is required");
     }
 
-    if (!signupState.email.trim()) {
+    if (!signupState.email.replace(/\s/g, "")) {
       validationErrors.email = "Email is required";
       handleError("email", "Email is required");
     } else if (!/^\S+@\S+\.\S+$/.test(signupState.email)) {
@@ -57,7 +57,7 @@ export default function Signup() {
       handleError("email", "Invalid email format");
     }
 
-    if (!signupState.password.trim()) {
+    if (!signupState.password.replace(/\s/g, "")) {
       validationErrors.password = "Password is required";
       handleError("password", "Password is required");
     } else if (signupState.password.length < 8) {

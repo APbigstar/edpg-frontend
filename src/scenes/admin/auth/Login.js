@@ -49,12 +49,12 @@ export default function Login() {
     e.preventDefault();
     const validationErrors = {};
 
-    if (!loginState.email.trim()) {
+    if (!loginState.email.replace(/\s/g, "")) {
       validationErrors.email = "Email is required";
       handleError("email", "Email is required");
     }
 
-    if (!loginState.password.trim()) {
+    if (!loginState.password.replace(/\s/g, "")) {
       validationErrors.password = "Password is required";
       handleError("password", "Password is required");
     }

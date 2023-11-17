@@ -37,6 +37,9 @@ import {
   AdminLoginPage,
   AdminSignupPage,
   Games,
+  EmptyTest,
+  SingleTest,
+  MultiTest,
 } from "scenes";
 
 // App
@@ -111,6 +114,9 @@ const App = () => {
             <Route path="/signin" element={<UserLoginPage />} />
             <Route path="/signup" element={<UserSignupPage />} />
             <Route path="/games" element={<Games />} />
+            <Route path="/games/empty" element={<EmptyTest />} />
+            <Route path="/games/single" element={<SingleTest />} />
+            <Route path="/games/multi" element={<MultiTest />} />
           </Routes>
           {!isSignIn && !isAdmin && !isGame && <Footer />}
           <ScrollButton />

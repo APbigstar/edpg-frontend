@@ -156,6 +156,21 @@ export default function Questions() {
     }
   }, [data]);
 
+  const isArraySubset = (answers, cases) => {
+    console.log(answers, cases)
+    let notFound = []
+    for (let i = 0; i < answers.length; i++) {
+      if (cases.includes(answers[i]) === false) {
+        notFound.push(answers[i])
+      }
+    }
+    if (notFound.length > 0) {
+      return false
+    } else {
+      return true
+    }
+  }
+
 
   const handleRowEditStart = (params, event) => {
     event.defaultMuiPrevented = true;
@@ -203,7 +218,7 @@ export default function Questions() {
     }
 
     // Check for words in answers that are not included in the question
-    const invalidWords = newRow.answers.trim().split(",").filter(element => !newRow.question.includes(element.trim()));
+    const invalidWords = newRow.answers.replace(/\s/g, '').split(",").filter(element => !newRow.question.includes(element.replace(/\s/g, '')));
 
     if (invalidWords.length > 0) {
       const beVerb = invalidWords.length === 1 ? 'is' : 'are';
@@ -212,9 +227,28 @@ export default function Questions() {
     }
 
     if (type === 'single') {
-      if (newRow.answers.trim().split(",").length > 1) {
+      if (newRow.answers.replace(/\s/g, '').split(",").length > 1) {
         alert('Please input only one valid word into Answers field')
         return null;
+      }
+    }
+
+    if (type === 'multi') {
+      const answersArray = newRow.answers.replace(/\s/g, '').split(",");
+      const casesArray = newRow.cases.replace(/\s/g, '').split(",");
+
+      console.log(newRow.answers.replace(/\s/g, ''))
+      console.log(casesArray)
+
+      const foundAnswer = answersArray.some(answer => casesArray.includes(answer));
+
+      if (foundAnswer) {
+        const isSubset = isArraySubset(answersArray, casesArray);
+
+        if (!isSubset) {
+          alert('Case field must include all of the words of answers field because Case field already contained one of the words of answers field');
+          return null;
+        }
       }
     }
 
