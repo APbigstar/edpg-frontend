@@ -7,16 +7,13 @@ import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
 import { useNavigate } from "react-router-dom";
 
 import IntroCloud from "../../../assets/q_1.png";
-import GuideCloud from "../../../assets/q_2.png";
 import IntroImg from "../../../assets/gif/4.gif";
 import EmptyFillImg from "../../../assets/gif/5.gif";
 import SingleChooseImg from "../../../assets/gif/6.gif";
 import MultiChooseImage from "../../../assets/gif/7.gif";
 
-import Correct0 from "../../../assets/correct/2.png";
-import Correct1 from "../../../assets/correct/5.png";
-import Wrong0 from "../../../assets/wrong/2.gif";
-import Wrong1 from "../../../assets/wrong/3.gif";
+import Correct from "../../../assets/correct/correct.png";
+import Wrong from "../../../assets/wrong/wrong.png";
 
 import TestCard from "components/TestCard";
 
@@ -149,7 +146,7 @@ const EmptyTest = () => {
   };
 
   return (
-    <React.Fragment>
+    <Box sx={{ paddingTop: "3%" }}>
       <Box>
         <button className="html_btn">HTML</button>
       </Box>
@@ -200,37 +197,37 @@ const EmptyTest = () => {
           </Button>
         }
       />
-    </React.Fragment>
+    </Box>
   );
 };
 const SingleTest = () => {
-  useEffect(() => {
-    const handleContextMenu = (event) => {
-      event.preventDefault();
-    };
+  // useEffect(() => {
+  //   const handleContextMenu = (event) => {
+  //     event.preventDefault();
+  //   };
 
-    const handleKeyDown = (event) => {
-      if (event.ctrlKey && event.keyCode === 82) {
-        event.preventDefault();
-      }
+  //   const handleKeyDown = (event) => {
+  //     if (event.ctrlKey && event.keyCode === 82) {
+  //       event.preventDefault();
+  //     }
 
-      if (event.ctrlKey && event.shiftKey && event.keyCode === 82) {
-        event.preventDefault();
-      }
+  //     if (event.ctrlKey && event.shiftKey && event.keyCode === 82) {
+  //       event.preventDefault();
+  //     }
 
-      if (event.keyCode === 116) {
-        event.preventDefault();
-      }
-    };
+  //     if (event.keyCode === 116) {
+  //       event.preventDefault();
+  //     }
+  //   };
 
-    window.addEventListener("contextmenu", handleContextMenu);
-    window.addEventListener("keydown", handleKeyDown);
+  //   window.addEventListener("contextmenu", handleContextMenu);
+  //   window.addEventListener("keydown", handleKeyDown);
 
-    return () => {
-      window.removeEventListener("contextmenu", handleContextMenu);
-      window.removeEventListener("keydown", handleKeyDown);
-    };
-  }, []);
+  //   return () => {
+  //     window.removeEventListener("contextmenu", handleContextMenu);
+  //     window.removeEventListener("keydown", handleKeyDown);
+  //   };
+  // }, []);
   const theme = useTheme();
   const navigate = useNavigate();
 
@@ -241,17 +238,46 @@ const SingleTest = () => {
   const [correctNum, setCorrectNum] = React.useState(0);
   const [wrong, setWrong] = React.useState(false);
   const [category, setCategory] = React.useState("html");
+  const [answer, setAnswer] = React.useState("");
+  const [selectedChoice, setSelectedChoice] = React.useState([]);
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setCorrect(false);
-    setWrong(false);
+    if (data[activeStep].answers[0] === answer) {
+      setCorrect(true);
+      setWrong(false);
+      setCorrectNum((prev) => prev + 1);
+    } else if (data[activeStep].answers[0] !== answer) {
+      setWrong(true);
+      setCorrect(false);
+    }
+    if (answer === -1) {
+      const isInArray = data[activeStep].answers.some((value) =>
+        data[activeStep].cases.includes(value)
+      );
+      if (isInArray === false) {
+        setCorrect(true);
+        setWrong(false);
+        setCorrectNum((prev) => prev + 1);
+      } else {
+        setCorrect(false);
+        setWrong(true);
+      }
+    }
+    setTimeout(() => {
+      setCorrect(false);
+      setWrong(false);
+      setAnswer("");
+      setSelectedChoice("");
+      setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    }, 1500);
   };
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
     setCorrect(false);
     setWrong(false);
+    setAnswer("");
+    setSelectedChoice("");
   };
 
   const handleGetTestData = async (value) => {
@@ -285,33 +311,9 @@ const SingleTest = () => {
     setActiveStep(0);
     setCorrectNum(0);
   };
-  const handleAnswer = (answer) => {
-    if (data[activeStep].answers[0] === answer) {
-      setCorrect(true);
-      setWrong(false);
-      setCorrectNum((prev) => prev + 1);
-    } else if (data[activeStep].answers[0] !== answer) {
-      setWrong(true);
-      setCorrect(false);
-    }
-    if (answer === -1) {
-      const isInArray = data[activeStep].answers.some((value) =>
-        data[activeStep].cases.includes(value)
-      );
-      if (isInArray === false) {
-        setCorrect(true);
-        setWrong(false);
-        setCorrectNum((prev) => prev + 1);
-      } else {
-        setCorrect(false);
-        setWrong(true);
-      }
-    }
-    setTimeout(() => {
-      setCorrect(false);
-      setWrong(false);
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    }, 1000);
+  const handleAnswer = (answer, index) => {
+    setAnswer(answer !== -1 && answer.replace(/\s/g, ""));
+    setSelectedChoice(index);
   };
 
   const handleTestMenu = () => {
@@ -319,7 +321,7 @@ const SingleTest = () => {
   };
 
   return (
-    <React.Fragment>
+    <Box sx={{ paddingTop: "3%" }}>
       <Box
         sx={{
           display: "flex",
@@ -342,7 +344,7 @@ const SingleTest = () => {
         </button>
         <button
           className="test_btn js_btn"
-          onClick={() => handleGetTestData("html")}
+          onClick={() => handleGetTestData("javascript")}
         >
           JavaScript
         </button>
@@ -404,22 +406,21 @@ const SingleTest = () => {
           <Box
             sx={{
               display: "flex",
-              alignItems: "flex-start",
               justifyContent: "space-between",
               padding: "150px",
             }}
           >
-            <Box>
+            <Box sx={{ width: "24%" }}>
               <img
-                style={{ width: "300px", cursor: "pointer" }}
+                style={{ width: "100%", cursor: "pointer" }}
                 src={IntroImg}
                 alt="Guide Image"
                 onClick={handleTestMenu}
               />
             </Box>
-            <Box>
+            <Box sx={{ width: "50%" }}>
               {data[activeStep] ? (
-                <>
+                <Box sx={{ maxWidth: "60%", margin: "auto" }}>
                   <p>{data[activeStep].question}</p>
                   <Box sx={{ display: "flex", flexDirection: "column" }}>
                     {data[activeStep].cases.map((item, index) => (
@@ -428,10 +429,11 @@ const SingleTest = () => {
                           my: "10px",
                           color: "white",
                           textTransform: "unset",
+                          background: selectedChoice === index && "#291281",
                         }}
                         key={index}
                         variant="outlined"
-                        onClick={() => handleAnswer(item)}
+                        onClick={() => handleAnswer(item, index)}
                       >
                         {item}
                       </Button>
@@ -441,17 +443,25 @@ const SingleTest = () => {
                         my: "10px",
                         color: "white",
                         textTransform: "unset",
+                        background: selectedChoice === -1 && "#291281",
                       }}
                       key={-1}
                       variant="outlined"
-                      onClick={() => handleAnswer(-1)}
+                      onClick={() => handleAnswer(-1, -1)}
                     >
                       Nothing
                     </Button>
                   </Box>
-                </>
+                </Box>
               ) : (
-                <>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
                   <p>Your Score is {(10 / data.length) * correctNum}</p>
                   <button
                     className="test_btn reset_btn"
@@ -459,27 +469,29 @@ const SingleTest = () => {
                   >
                     Reset
                   </button>
-                </>
+                </Box>
               )}
             </Box>
-            <Box>
+            <Box sx={{ width: "24%", textAlign: "center" }}>
               {correct && (
-                <img
-                  src={data.length % 2 === 0 ? Correct0 : Correct1}
-                  alt="Correct Image"
-                />
+                // <img
+                //   src={data.length % 2 === 0 ? Correct0 : Correct1}
+                //   alt="Correct Image"
+                // />
+                <img src={Correct} alt="Correct" />
               )}
               {wrong && (
-                <img
-                  src={data.length % 2 === 0 ? Wrong0 : Wrong1}
-                  alt="Wrong Image"
-                />
+                // <img
+                //   src={data.length % 2 === 0 ? Wrong0 : Wrong1}
+                //   alt="Wrong Image"
+                // />
+                <img src={Wrong} alt="Wrong" />
               )}
             </Box>
           </Box>
         </>
       )}
-    </React.Fragment>
+    </Box>
   );
 };
 
@@ -562,6 +574,8 @@ const MultiTest = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
     setCorrect(false);
     setWrong(false);
+    setSelectedChoices([]);
+    setAnswers([]);
   };
 
   const handleGetTestData = async (value) => {
@@ -605,7 +619,18 @@ const MultiTest = () => {
       updatedChoices.push(index);
     }
     setSelectedChoices(updatedChoices);
-    setAnswers((prevValue) => [...prevValue, answer]);
+    setAnswers((prevValue) => {
+      if (prevValue.includes(answer)) {
+        return prevValue.filter((item) => item !== answer);
+      } else {
+        return [
+          ...prevValue,
+          answer !== -1 ? answer.replace(/\s/g, "") : answer,
+        ];
+      }
+    });
+
+    console.log(answers);
   };
 
   const handleTestMenu = () => {
@@ -613,7 +638,7 @@ const MultiTest = () => {
   };
 
   return (
-    <React.Fragment>
+    <Box sx={{ paddingTop: "3%" }}>
       <Box
         sx={{
           display: "flex",
@@ -636,7 +661,7 @@ const MultiTest = () => {
         </button>
         <button
           className="test_btn js_btn"
-          onClick={() => handleGetTestData("html")}
+          onClick={() => handleGetTestData("javascript")}
         >
           JavaScript
         </button>
@@ -698,22 +723,21 @@ const MultiTest = () => {
           <Box
             sx={{
               display: "flex",
-              alignItems: "flex-start",
               justifyContent: "space-between",
               padding: "150px",
             }}
           >
-            <Box>
+            <Box sx={{ width: "24%" }}>
               <img
-                style={{ width: "300px", cursor: "pointer" }}
+                style={{ width: "100%", cursor: "pointer" }}
                 src={IntroImg}
                 alt="Guide Image"
                 onClick={handleTestMenu}
               />
             </Box>
-            <Box>
+            <Box sx={{ width: "50%" }}>
               {data[activeStep] ? (
-                <>
+                <Box sx={{ maxWidth: "60%", margin: "auto" }}>
                   <p>{data[activeStep].question}</p>
                   <Box sx={{ display: "flex", flexDirection: "column" }}>
                     {data[activeStep].cases.map((item, index) => (
@@ -749,7 +773,7 @@ const MultiTest = () => {
                       Nothing
                     </Button>
                   </Box>
-                </>
+                </Box>
               ) : (
                 <>
                   <p>Your Score is {(10 / data.length) * correctNum}</p>
@@ -762,24 +786,26 @@ const MultiTest = () => {
                 </>
               )}
             </Box>
-            <Box>
+            <Box sx={{ width: "24%", textAlign: "center" }}>
               {correct && (
-                <img
-                  src={data.length % 2 === 0 ? Correct0 : Correct1}
-                  alt="Correct Image"
-                />
+                // <img
+                //   src={data.length % 2 === 0 ? Correct0 : Correct1}
+                //   alt="Correct Image"
+                // />
+                <img src={Correct} alt="Wrong" />
               )}
               {wrong && (
-                <img
-                  src={data.length % 2 === 0 ? Wrong0 : Wrong1}
-                  alt="Wrong Image"
-                />
+                // <img
+                //   src={data.length % 2 === 0 ? Wrong0 : Wrong1}
+                //   alt="Wrong Image"
+                // />
+                <img src={Wrong} alt="Wrong" />
               )}
             </Box>
           </Box>
         </>
       )}
-    </React.Fragment>
+    </Box>
   );
 };
 
