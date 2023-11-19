@@ -18,8 +18,10 @@ const Header = () => {
     dispatch(setIsLoggedin(false));
   };
 
+  console.log(process.env.REACT_APP_Local_URL);
+
   const showGamesWindow = () => {
-    const gameUrl = "http://localhost:3000/games";
+    const gameUrl = `${process.env.REACT_APP_Local_URL}/games`;
     window.open(gameUrl, "_blank", "width=1600,height=1000");
   };
 
