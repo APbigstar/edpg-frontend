@@ -220,10 +220,12 @@ export default function Questions() {
     // Check for words in answers that are not included in the question
     const invalidWords = newRow.answers.replace(/\s/g, '').split(",").filter(element => !newRow.question.includes(element.replace(/\s/g, '')));
 
-    if (invalidWords.length > 0) {
-      const beVerb = invalidWords.length === 1 ? 'is' : 'are';
-      alert(invalidWords.join(", ") + " " + beVerb + ' invalid!');
-      return null;
+    if (type === 'empty') {
+      if (invalidWords.length > 0) {
+        const beVerb = invalidWords.length === 1 ? 'is' : 'are';
+        alert(invalidWords.join(", ") + " " + beVerb + ' invalid!');
+        return null;
+      }
     }
 
     if (type === 'single') {
