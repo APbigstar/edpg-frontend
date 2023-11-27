@@ -261,6 +261,8 @@ export default function Questions() {
       updatedRow = { ...newRow, category, type, isNew: false };
     }
 
+    console.log(updatedRow)
+
     const { data } = await updateQuestionData(updatedRow);
     if (data.data._id) {
       setRows(rows.map((row) => (row._id === newRow._id ? updatedRow : row)));

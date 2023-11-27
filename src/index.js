@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import { api } from "state/api";
 import authReducer from "./features/auth/auth";
+import gameReducer from "./features/game/game";
 import { BrowserRouter } from "react-router-dom";
 
 import App from "./App";
@@ -17,6 +18,7 @@ const store = configureStore({
     global: globalReducer,
     [api.reducerPath]: api.reducer,
     authSetter: authReducer,
+    gameTypeSetter: gameReducer,
   },
   middleware: (getDefault) => getDefault().concat(api.middleware),
 });

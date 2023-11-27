@@ -94,6 +94,7 @@ export const api = createApi({
     updateQuestion: build.mutation({
       query: (data) => {
         const { _id, ...userData } = data;
+        console.log(userData);
         const method = userData.isNew === false ? "PUT" : "POST";
         const url =
           userData.isNew === false

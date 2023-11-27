@@ -5,6 +5,7 @@ import "./header.css";
 
 import { useSelector, useDispatch } from "react-redux";
 import { setIsLoggedin } from "../../../../features/auth/auth";
+import { setGameType } from "../../../../features/game/game";
 
 const Header = () => {
   const [click, setClick] = useState(false);
@@ -21,6 +22,7 @@ const Header = () => {
   console.log(process.env.REACT_APP_Local_URL);
 
   const showGamesWindow = () => {
+    dispatch(setGameType("start"));
     const gameUrl = `${process.env.REACT_APP_Local_URL}/games`;
     window.open(gameUrl, "_blank", "width=1600,height=1000");
   };
