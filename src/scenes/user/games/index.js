@@ -114,36 +114,36 @@ const Games = (props) => {
 };
 
 const EmptyTest = () => {
-  // useEffect(() => {
-  //   const handleContextMenu = (event) => {
-  //     event.preventDefault();
-  //   };
+  useEffect(() => {
+    const handleContextMenu = (event) => {
+      event.preventDefault();
+    };
 
-  //   const handleKeyDown = (event) => {
-  //     // Check for Ctrl+R (key code 82)
-  //     if (event.ctrlKey && event.keyCode === 82) {
-  //       event.preventDefault();
-  //     }
+    const handleKeyDown = (event) => {
+      // Check for Ctrl+R (key code 82)
+      if (event.ctrlKey && event.keyCode === 82) {
+        event.preventDefault();
+      }
 
-  //     // Check for Ctrl+Shift+R (key code 82)
-  //     if (event.ctrlKey && event.shiftKey && event.keyCode === 82) {
-  //       event.preventDefault();
-  //     }
+      // Check for Ctrl+Shift+R (key code 82)
+      if (event.ctrlKey && event.shiftKey && event.keyCode === 82) {
+        event.preventDefault();
+      }
 
-  //     // Check for F5 key (key code 116)
-  //     if (event.keyCode === 116) {
-  //       event.preventDefault();
-  //     }
-  //   };
+      // Check for F5 key (key code 116)
+      if (event.keyCode === 116) {
+        event.preventDefault();
+      }
+    };
 
-  //   window.addEventListener("contextmenu", handleContextMenu);
-  //   window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("contextmenu", handleContextMenu);
+    window.addEventListener("keydown", handleKeyDown);
 
-  //   return () => {
-  //     window.removeEventListener("contextmenu", handleContextMenu);
-  //     window.removeEventListener("keydown", handleKeyDown);
-  //   };
-  // }, []);
+    return () => {
+      window.removeEventListener("contextmenu", handleContextMenu);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
   const theme = useTheme();
   const navigate = useNavigate();
 
