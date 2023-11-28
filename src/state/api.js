@@ -28,6 +28,10 @@ export const api = createApi({
       query: () => "client/users",
       providesTags: ["Users"],
     }),
+    getScores: build.query({
+      query: () => "management/scores",
+      providesTags: ["Dashboard"],
+    }),
     getTransactions: build.query({
       query: ({ page, pageSize, sort, search }) => ({
         url: "client/transactions",
@@ -123,6 +127,7 @@ export const api = createApi({
 export const {
   useGetUserQuery,
   useGetUsersQuery,
+  useGetScoresQuery,
   useGetTransactionsQuery,
   useGetGeographyQuery,
   useGetSalesQuery,

@@ -74,8 +74,8 @@ const Games = (props) => {
           style={{
             maxWidth: 267,
             position: "absolute",
-            top: "70px",
-            left: "57px",
+            top: "35px",
+            left: "73px",
             color: "black",
             fontFamily: "Halloween Slime",
             fontSize: "24px",
@@ -401,9 +401,8 @@ const EmptyTest = () => {
                       fontSize: "43px",
                       textAlign: "center",
                       lineHeight: "50px",
-                      overflowX: "hidden",
-                      overflowY: "scroll",
-                      maxWidth: "300px",
+                      maxWidth: "500px",
+                      width: "500px",
                     }}
                   >
                     {data[activeStep].question
@@ -424,10 +423,12 @@ const EmptyTest = () => {
                               }}
                               key={index}
                               disabled
-                            />
+                            />{" "}
                           </>
                         ) : (
-                          <span key={index}>{word} </span>
+                          <span style={{ maxWidth: "500px" }} key={index}>
+                            {word}{" "}
+                          </span>
                         );
                       })}
                   </p>
@@ -441,7 +442,10 @@ const EmptyTest = () => {
                     justifyContent: "center",
                   }}
                 >
-                  <p>Your Score is {(10 / data.length) * correctNum}</p>
+                  {/* <p>Your Score is {(10 / data.length) * correctNum}</p> */}
+                  <p>
+                    You got {correctNum} out of {data.length} correct.
+                  </p>
                   <button
                     className="test_btn reset_btn"
                     onClick={() => handleResetActiveStep()}
@@ -492,7 +496,7 @@ const EmptyTest = () => {
               <Box
                 sx={{
                   position: "absolute",
-                  top: "42%",
+                  top: "38%",
                   left: "50%",
                   transform: "translate(-50%, -50%)",
                   textAlign: "center",
@@ -824,7 +828,10 @@ const SingleTest = () => {
                     justifyContent: "center",
                   }}
                 >
-                  <p>Your Score is {(10 / data.length) * correctNum}</p>
+                  {/* <p>Your Score is {(10 / data.length) * correctNum}</p> */}
+                  <p>
+                    You got {correctNum} out of {data.length} correct.
+                  </p>
                   <button
                     className="test_btn reset_btn"
                     onClick={() => handleResetActiveStep()}
@@ -1159,7 +1166,10 @@ const MultiTest = () => {
                 </Box>
               ) : (
                 <>
-                  <p>Your Score is {(10 / data.length) * correctNum}</p>
+                  {/* <p>Your Score is {(10 / data.length) * correctNum}</p> */}
+                  <p>
+                    You got {correctNum} out of {data.length} correct.
+                  </p>
                   <button
                     className="test_btn reset_btn"
                     onClick={() => handleResetActiveStep()}

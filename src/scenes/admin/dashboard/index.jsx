@@ -1,240 +1,262 @@
-import React from "react";
+import * as React from 'react';
+import { Box, useTheme } from "@mui/material";
 import {
-  DownloadOutlined,
-  Email,
-  PointOfSale,
-  PersonAdd,
-  Traffic,
-} from "@mui/icons-material";
-import {
-  Box,
-  Button,
-  Typography,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
-
-import { useGetDashboardQuery } from "state/api";
-import {
-  FlexBetween,
-  Header,
-  BreakdownChart,
-  OverviewChart,
-  StatBox,
-} from "components";
-
-const Dashboard = () => {
-  // theme
+  DataGrid,
+} from '@mui/x-data-grid';
+import { useGetUsersQuery, useGetScoresQuery } from "state/api";
+import { Header } from "components";
+export default function Dashboard() {
   const theme = useTheme();
-  // is large desktop screen
-  const isNonMediumScreen = useMediaQuery("(min-width: 1200px)");
-  // get data
-  const { data, isLoading } = useGetDashboardQuery();
+  const { data } = useGetScoresQuery();
+  const [emptyRows, setEmptyRows] = React.useState([]);
+  const [sigleRows, setSingleRows] = React.useState([]);
+  const [multiRows, setMultiRows] = React.useState([]);
+  const [transactionRows, setTransactionRows] = React.useState([]);
+  const [rowModesModel, setRowModesModel] = React.useState({});
 
-  // data columns
+  React.useEffect(() => {
+    let emptyData = []
+    let singleData = []
+    let multiData = []
+    if (data) {
+      data.map(item => {
+        const rowData = {
+          _id: item._id,
+          name: item.user_id.name,
+          type: item.type,
+          category: item.category,
+          score: item.score,
+        };
+        if (item.type === 'empty') {
+          emptyData.push(rowData)
+        } else if (item.type === 'single') {
+          singleData.push(rowData)
+        } else {
+          multiData.push(rowData)
+        }
+      })
+      setEmptyRows(emptyData);
+      setSingleRows(singleData);
+      setMultiRows(multiData);
+    }
+  }, [data]);
+
   const columns = [
+    { field: 'name', headerName: 'Name', flex: 1 },
     {
-      field: "_id",
-      headerName: "ID",
+      field: 'type',
+      headerName: 'Type',
       flex: 1,
+      align: 'left',
+      headerAlign: 'left',
     },
     {
-      field: "userId",
-      headerName: "User ID",
-      flex: 0.5,
-    },
-    {
-      field: "createdAt",
-      headerName: "Created At",
+      field: 'category',
+      headerName: 'Category',
       flex: 1,
+      align: 'left',
+      headerAlign: 'left',
     },
     {
-      field: "products",
-      headerName: "# of Products",
-      flex: 0.5,
-      sortable: false,
-      renderCell: (params) => params.value.length,
-    },
-    {
-      field: "cost",
-      headerName: "Cost",
+      field: 'score',
+      headerName: 'Score',
       flex: 1,
-      renderCell: (params) => `$${Number(params.value).toFixed(2)}`,
+      align: 'right',
+      headerAlign: 'right',
     },
   ];
 
   return (
-    <Box m="1.5rem 2.5rem">
-      <FlexBetween>
-        {/* Header */}
-        <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
-
-        {/* Content */}
-        <Box>
-          {/* Download Reports */}
-          <Button
+    <Box sx={{ padding: "30px" }}>
+      <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between", marginBottom: "30px" }}>
+        <Box sx={{ width: "49%" }}>
+          <Header title="Testing Result" subtitle="Empty Filling" />
+          <Box
+            mt="40px"
+            height="40vh"
             sx={{
-              backgroundColor: theme.palette.secondary.light,
-              color: theme.palette.background.alt,
-              fontSize: "14px",
-              fontWeight: "bold",
-              padding: "10px 20px",
-
-              "&:hover": {
+              "& .MuiDataGrid-root": {
+                border: "none",
+              },
+              "& .MuiDataGrid-cell": {
+                borderBottom: "none",
+              },
+              "& .MuiDataGrid-columnHeaders": {
                 backgroundColor: theme.palette.background.alt,
-                color: theme.palette.secondary.light,
+                color: theme.palette.secondary[100],
+                borderBottom: "none",
+              },
+              "& .MuiDataGrid-virtualScroller": {
+                backgroundColor: theme.palette.primary.light,
+              },
+              "& .MuiDataGrid-footerContainer": {
+                backgroundColor: theme.palette.primary.light,
+                color: theme.palette.secondary[100],
+                borderTop: "none",
+              },
+              "& .MuiDataGrid-toolbarContainer .MuiButtom-text": {
+                color: `${theme.palette.secondary[200]} !important`,
               },
             }}
           >
-            <DownloadOutlined sx={{ mr: "10px" }} />
-            Download Reports
-          </Button>
+            <DataGrid
+              getRowId={(row) => row._id}
+              rows={emptyRows}
+              columns={columns}
+              editMode="row"
+              rowModesModel={rowModesModel}
+              onRowModesModelChange={(newModel) => setRowModesModel(newModel)}
+              onProcessRowUpdateError={(error) => {
+              }}
+              componentsProps={{
+                toolbar: { setEmptyRows, setRowModesModel },
+              }}
+              experimentalFeatures={{ newEditingApi: true }}
+            />
+          </Box>
         </Box>
-      </FlexBetween>
-
-      <Box
-        mt="20px"
-        display="grid"
-        gridTemplateColumns="repeat(12, 1fr)"
-        gridAutoRows="160px"
-        gap="20px"
-        sx={{
-          "& > div": {
-            gridColumn: isNonMediumScreen ? undefined : "span 12",
-          },
-        }}
-      >
-        {/* ROW 1 */}
-        {/* Total Customers */}
-        <StatBox
-          title="Total Customers"
-          value={data && data.totalCustomers}
-          increase="+14%"
-          description="Since last month"
-          icon={
-            <Email
-              sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
-            />
-          }
-        />
-
-        {/* Sales Today */}
-        <StatBox
-          title="Sales Today"
-          value={data && data.todayStats.totalSales}
-          increase="+21%"
-          description="Since last month"
-          icon={
-            <PointOfSale
-              sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
-            />
-          }
-        />
-
-        {/* Overview Chart */}
-        <Box
-          gridColumn="span 8"
-          gridRow="span 2"
-          backgroundColor={theme.palette.background.alt}
-          p="1rem"
-          borderRadius="0.55rem"
-        >
-          <OverviewChart view="sales" isDashboard={true} />
-        </Box>
-
-        {/* Monthly Sales */}
-        <StatBox
-          title="Monthly Sales"
-          value={data && data.thisMonthStats.totalSales}
-          increase="+5%"
-          description="Since last month"
-          icon={
-            <PersonAdd
-              sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
-            />
-          }
-        />
-
-        {/* Yearly Sales */}
-        <StatBox
-          title="Yearly Sales"
-          value={data && data.yearlySalesTotal}
-          increase="+43%"
-          description="Since last month"
-          icon={
-            <Traffic
-              sx={{ color: theme.palette.secondary[300], fontSize: "26px" }}
-            />
-          }
-        />
-
-        {/* ROW 2 */}
-        {/* Transactions */}
-        <Box
-          gridColumn="span 8"
-          gridRow="span 3"
-          sx={{
-            "& .MuiDataGrid-root": {
-              border: "none",
-              borderRadius: "5rem",
-            },
-            "& .MuiDataGrid-cell": {
-              borderBottom: "none",
-            },
-            "& .MuiDataGrid-columnHeaders": {
-              backgroundColor: theme.palette.background.alt,
-              color: theme.palette.secondary[100],
-              borderBottom: "none",
-            },
-            "& .MuiDataGrid-virtualScroller": {
-              backgroundColor: theme.palette.background.alt,
-            },
-            "& .MuiDataGrid-footerContainer": {
-              backgroundColor: theme.palette.background.alt,
-              color: theme.palette.secondary[100],
-              borderTop: "none",
-            },
-            "& .MuiDataGrid-toolbarContainer .MuiButtom-text": {
-              color: `${theme.palette.secondary[200]} !important`,
-            },
-          }}
-        >
-          <DataGrid
-            loading={isLoading || !data}
-            getRowId={(row) => row._id}
-            rows={(data && data.transactions) || []}
-            columns={columns}
-          />
-        </Box>
-
-        {/* Sales by Category */}
-        <Box
-          gridColumn="span 4"
-          gridRow="span 3"
-          backgroundColor={theme.palette.background.alt}
-          p="1.5rem"
-          borderRadius="0.55rem"
-        >
-          <Typography variant="h6" sx={{ color: theme.palette.secondary[100] }}>
-            Sales by Category
-          </Typography>
-
-          <BreakdownChart isDashboard={true} />
-          <Typography
-            p="0 0.6rem"
-            fontSize="0.8rem"
+        <Box sx={{ width: "49%" }}>
+          <Header title="Testing Result" subtitle="Single Choice" />
+          <Box
+            mt="40px"
+            height="40vh"
             sx={{
-              color: theme.palette.secondary[200],
+              "& .MuiDataGrid-root": {
+                border: "none",
+              },
+              "& .MuiDataGrid-cell": {
+                borderBottom: "none",
+              },
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: theme.palette.background.alt,
+                color: theme.palette.secondary[100],
+                borderBottom: "none",
+              },
+              "& .MuiDataGrid-virtualScroller": {
+                backgroundColor: theme.palette.primary.light,
+              },
+              "& .MuiDataGrid-footerContainer": {
+                backgroundColor: theme.palette.primary.light,
+                color: theme.palette.secondary[100],
+                borderTop: "none",
+              },
+              "& .MuiDataGrid-toolbarContainer .MuiButtom-text": {
+                color: `${theme.palette.secondary[200]} !important`,
+              },
             }}
           >
-            Breakdown of real states and information via category for revenue
-            made for this year and total sales
-          </Typography>
+            <DataGrid
+              getRowId={(row) => row._id}
+              rows={sigleRows}
+              columns={columns}
+              editMode="row"
+              rowModesModel={rowModesModel}
+              onRowModesModelChange={(newModel) => setRowModesModel(newModel)}
+              onProcessRowUpdateError={(error) => {
+              }}
+              componentsProps={{
+                toolbar: { setSingleRows, setRowModesModel },
+              }}
+              experimentalFeatures={{ newEditingApi: true }}
+            />
+          </Box>
+        </Box>
+      </Box>
+      <Box sx={{ width: "100%", display: "flex", justifyContent: "space-between" }}>
+        <Box sx={{ width: "49%" }}>
+          <Header title="Testing Result" subtitle="Multi Choice" />
+          <Box
+            mt="40px"
+            height="40vh"
+            sx={{
+              "& .MuiDataGrid-root": {
+                border: "none",
+              },
+              "& .MuiDataGrid-cell": {
+                borderBottom: "none",
+              },
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: theme.palette.background.alt,
+                color: theme.palette.secondary[100],
+                borderBottom: "none",
+              },
+              "& .MuiDataGrid-virtualScroller": {
+                backgroundColor: theme.palette.primary.light,
+              },
+              "& .MuiDataGrid-footerContainer": {
+                backgroundColor: theme.palette.primary.light,
+                color: theme.palette.secondary[100],
+                borderTop: "none",
+              },
+              "& .MuiDataGrid-toolbarContainer .MuiButtom-text": {
+                color: `${theme.palette.secondary[200]} !important`,
+              },
+            }}
+          >
+            <DataGrid
+              getRowId={(row) => row._id}
+              rows={multiRows}
+              columns={columns}
+              editMode="row"
+              rowModesModel={rowModesModel}
+              onRowModesModelChange={(newModel) => setRowModesModel(newModel)}
+              onProcessRowUpdateError={(error) => {
+              }}
+              componentsProps={{
+                toolbar: { setMultiRows, setRowModesModel },
+              }}
+              experimentalFeatures={{ newEditingApi: true }}
+            />
+          </Box>
+        </Box>
+        <Box sx={{ width: "49%" }}>
+          <Header title="Transactions" subtitle="List of Transactions" />
+          <Box
+            mt="40px"
+            height="40vh"
+            sx={{
+              "& .MuiDataGrid-root": {
+                border: "none",
+              },
+              "& .MuiDataGrid-cell": {
+                borderBottom: "none",
+              },
+              "& .MuiDataGrid-columnHeaders": {
+                backgroundColor: theme.palette.background.alt,
+                color: theme.palette.secondary[100],
+                borderBottom: "none",
+              },
+              "& .MuiDataGrid-virtualScroller": {
+                backgroundColor: theme.palette.primary.light,
+              },
+              "& .MuiDataGrid-footerContainer": {
+                backgroundColor: theme.palette.primary.light,
+                color: theme.palette.secondary[100],
+                borderTop: "none",
+              },
+              "& .MuiDataGrid-toolbarContainer .MuiButtom-text": {
+                color: `${theme.palette.secondary[200]} !important`,
+              },
+            }}
+          >
+            <DataGrid
+              getRowId={(row) => row._id}
+              rows={transactionRows}
+              columns={columns}
+              editMode="row"
+              rowModesModel={rowModesModel}
+              onRowModesModelChange={(newModel) => setRowModesModel(newModel)}
+              onProcessRowUpdateError={(error) => {
+              }}
+              componentsProps={{
+                toolbar: { setTransactionRows, setRowModesModel },
+              }}
+              experimentalFeatures={{ newEditingApi: true }}
+            />
+          </Box>
         </Box>
       </Box>
     </Box>
-  );
-};
 
-export default Dashboard;
+  );
+}
